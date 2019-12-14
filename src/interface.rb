@@ -12,8 +12,7 @@ class Interface
     puts 'Start new game - 1, quit - 0'
     if gets.chomp.to_i == 1
       puts 'Enter your name: '
-      player = Player.new(gets.chomp)
-      @game = Game.new(player)
+      @game = Game.new(gets.chomp)
       start_game
     else
       puts 'You finished playing Black Jack'
@@ -75,13 +74,13 @@ class Interface
   # состаяние игры
   def show_state(settings)
     puts '=================================='
-    puts "Bank Player = #{@game.player.money_amount} | Bank Dealer = #{@game.dealer.money_amount}"
+    puts "Bank Player = #{@game.player.bank.amount} | Bank Dealer = #{@game.dealer.bank.amount}"
     if settings[:show_dealer]
-      puts "Dealer card = #{@game.dealer.get_cards.map(&:sign).join(' ')} count = #{@game.dealer.score}"
+      puts "Dealer card = #{@game.dealer.hand.card_list.map(&:sign).join(' ')} count = #{@game.dealer.hand.score}"
     else
       puts 'Dealer card = * *'
     end
-    puts "Player card = #{@game.player.get_cards.map(&:sign).join(' ')} count = #{@game.player.score}"
+    puts "Player card = #{@game.player.hand.card_list.map(&:sign).join(' ')} count = #{@game.player.hand.score}"
     puts '=================================='
   end
 

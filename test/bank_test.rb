@@ -17,4 +17,5 @@ class BankTest < Test::Unit::TestCase
     10.times { @bank.make_bet }
     assert_equal false, @bank.enough_bank?
   end
+
 end

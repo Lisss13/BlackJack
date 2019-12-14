@@ -1,5 +1,6 @@
 require_relative './dealer'
 require_relative './deck'
+require_relative './player'
 
 # Логика игры
 class Game
@@ -7,29 +8,29 @@ class Game
   attr_reader :dealer, :player
 
   def initialize(player)
-    @player = player
+    @player = Player.new(player)
     @dealer = Dealer.new
     @deck = Deck.new
   end
 
   def game_continue?
-    @player.enough_bank? && @dealer.enough_bank? && @deck.enough_cards?
+    @player.bank.enough_bank? && @dealer.bank.enough_bank? && @deck.enough_cards?
   end
 
   def round_continue?
-    @player.count_cards == 3 ? false : true
+    @player.hand.number_cards == 3 ? false : true
   end
 
   def first_round
     @player.take_cart(@deck.deal_card, @deck.deal_card)
-    @player.make_bet
+    @player.bank.make_bet
     @dealer.take_cart(@deck.deal_card, @deck.deal_card)
-    @dealer.make_bet
+    @dealer.bank.make_bet
   end
 
   def dealer_move
-    if @dealer.score < 17
-      @dealer.add_cart(@deck.deal_card) if @player.score < 3
+    if @dealer.hand.score < 17
+      @dealer.hand.add_card(@deck.deal_card)
       true
     else
       false
@@ -37,27 +38,27 @@ class Game
   end
 
   def player_move
-    @player.add_cart(@deck.deal_card) if @player.score < 3
+    @player.hand.add_card(@deck.deal_card)
   end
 
   def result
-    if @player.score == @dealer.score
-      @dealer.add_chips(10)
-      @player.add_chips(10)
+    if @player.hand.score == @dealer.hand.score
+      @dealer.bank.add_chips(10)
+      @player.bank.add_chips(10)
       nil
-    elsif @player.score <= 21 && @dealer.score <= 21
-      if @player.score > @dealer.score
-        @player.add_chips(20)
+    elsif @player.hand.score <= 21 && @dealer.hand.score <= 21
+      if @player.hand.score > @dealer.hand.score
+        @player.bank.add_chips(20)
         @player
       else
-        @dealer.add_chips(20)
+        @dealer.bank.add_chips(20)
         @dealer
       end
-    elsif @player.score <= 21 && @dealer.score > 21
-      @player.add_chips(20)
+    elsif @player.hand.score <= 21 && @dealer.hand.score > 21
+      @player.bank.add_chips(20)
       @player
-    elsif @player.score > 21 && @dealer.score <= 21
-      @dealer.add_chips(20)
+    elsif @player.hand.score > 21 && @dealer.hand.score <= 21
+      @dealer.bank.add_chips(20)
       @dealer
     end
   end

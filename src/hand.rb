@@ -13,6 +13,10 @@ class Hand
     @card_list << card
   end
 
+  def number_cards
+    @card_list.size
+  end
+
   def score
     sum = 0
     @card_list.each { |card| sum += card.value }
